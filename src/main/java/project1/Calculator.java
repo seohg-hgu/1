@@ -2,12 +2,12 @@ package project1;
 
 import java.util.Stack;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.layout.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
 import java.util.ArrayList;
+
+
+
 
 public class Calculator {
 	static Text    txtResult;                              // 이미지 버튼
@@ -23,7 +23,6 @@ public class Calculator {
     static double memory;
 	static Composite comp ;
 	static double M;
-	
 	
 	static Stack<String> stack = new Stack<String>() ;
 	static ArrayList<String> list = new ArrayList<String>();
@@ -83,11 +82,11 @@ public class Calculator {
 		
         btnOF			= new Button(comp, SWT.PUSH);
         btnOF        	.setLayoutData(gData);
-        btnOF        	.setText("On/Off");
+        btnOF        	.setText("AC");
         
         btnHis 			= new Button(comp, SWT.PUSH);
         btnHis        	.setLayoutData(gData);
-        btnHis        	.setText("");
+        btnHis        	.setText("기록");
                 
         btnGT			= new Button(comp, SWT.PUSH);
         btnGT        	.setLayoutData(gData);
@@ -95,7 +94,7 @@ public class Calculator {
         
         btnClear        = new Button(comp, SWT.PUSH);
         btnClear        .setLayoutData(gData);
-        btnClear        .setText("Clear");
+        btnClear        .setText("C");
         
         btnBack			= new Button(comp, SWT.PUSH);
         btnBack        	.setLayoutData(gData);
@@ -217,13 +216,7 @@ public class Calculator {
 		           input_number += number;
 		           //Double tmp = Double.parseDouble(input_number);
 		           txtResult.setText(input_number);
-		           //list.add(input_number);
-		           /*if(tmp%1==0) {
-		        	   tmpI=Integer.parseInt(String.valueOf(Math.round(tmp)));
-		        	   txtResult.setText(tmpI + "");
-		           }else {
-		        	   txtResult.setText(tmp + "");
-		           }*/
+		           
 		        }
 		                
 		     });
@@ -236,6 +229,17 @@ public class Calculator {
 		    @Override
 		    public void handleEvent(Event event) {
 		        // TODO Auto-generated method stub
+		    	result_number=0;
+		    	input_number="";
+		    	txtResult.setText("");
+		    	stack.clear();
+		    	list.clear();
+		    	post.clear();
+		    	result.clear();
+		    	his.clear();
+		    	idx=his.size()-1;
+		    	memory=0;
+		    	M=0;
 		    	
 		    }
 		});
@@ -360,19 +364,10 @@ public class Calculator {
 		    		input_number=Double.toString(n);
 		    	}
 		        result_number += Double.parseDouble(input_number);
-		        //Double tmp = Double.parseDouble(input_number);
+		        
 		        list.add(input_number);
 		        list.add(oper);
-		        /*if(oper!="=") {
-		        	if(tmp%1==0) {
-			        	   tmpI=Integer.parseInt(String.valueOf(Math.round(tmp)));
-			        	   txtResult.setText(tmpI + "");
-			           }else {
-			        	   txtResult.setText(tmp + "");
-			           }
-		        }*/
 		        
-		        //oper = "+";
 		        input_number = "";
 		        
 		    }
@@ -396,18 +391,9 @@ public class Calculator {
 		    	}
 		        //result_number += Integer.parseInt(input_number);
 		        
-		        Double tmp = Double.parseDouble(input_number);
+		        
 		        list.add(input_number);
 		        list.add(oper);
-		        /*if(oper!="=") {
-		        	if(tmp%1==0) {
-			        	   tmpI=Integer.parseInt(String.valueOf(Math.round(tmp)));
-			        	   txtResult.setText(tmpI + "");
-			           }else {
-			        	   txtResult.setText(tmp + "");
-			           }
-		        }*/
-		        //oper = "-";
 		        input_number = "0";
 		        
 		    }
@@ -428,19 +414,8 @@ public class Calculator {
 		    		double n=Math.sqrt(Double.parseDouble(input_number));
 		    		input_number=Double.toString(n);
 		    	}
-		        Double tmp = Double.parseDouble(input_number);
 		        list.add(input_number);
 		        list.add(oper);
-		        /*if(oper!="=") {
-		        	if(tmp%1==0) {
-			        	   tmpI=Integer.parseInt(String.valueOf(Math.round(tmp)));
-			        	   txtResult.setText(tmpI + "");
-			           }else {
-			        	   txtResult.setText(tmp + "");
-			           }
-		        }*/
-		        
-		        //oper = "*";
 		        input_number = "";
 		        
 		    }
@@ -461,19 +436,9 @@ public class Calculator {
 		    		double n=Math.sqrt(Double.parseDouble(input_number));
 		    		input_number=Double.toString(n);
 		    	}
-		        Double tmp = Double.parseDouble(input_number);
+		       // Double tmp = Double.parseDouble(input_number);
 		        list.add(input_number);
 		        list.add(oper);
-		        /*if(oper!="=") {
-		        	if(tmp%1==0) {
-			        	   tmpI=Integer.parseInt(String.valueOf(Math.round(tmp)));
-			        	   txtResult.setText(tmpI + "");
-			           }else {
-			        	   txtResult.setText(tmp + "");
-			           }
-		        }*/
-		        
-		        //oper = "/";
 		        input_number = "";
 		        
 		    }
@@ -483,151 +448,115 @@ public class Calculator {
 			String tmp;
 		    @Override
 		    public void handleEvent(Event event) {
-		    	
-		    	//convert to postfix
-		    	if(input_number.contains("√")) {
-		    		input_number=input_number.substring(1, input_number.length());
-		    		double n=Math.sqrt(Double.parseDouble(input_number));
-		    		input_number=Double.toString(n);
-		    	}
-		    	list.add(input_number);
-		    	for(int i=0;i<list.size();i++) {
-		    		//System.out.println(list.get(i));
-		    	}
-		    	
-		    	for (int i = 0; i < list.size(); i++) {
-		    		if (is_operand(list.get(i))) {
-		    			post.push(list.get(i));
-		    		}
-		    		else {
-		    			if (list.get(i) == "(") {
-		    				stack.push(list.get(i));
-		    			}
-		    			else if (list.get(i) == ")") {
-		    				while (true) {
-		    					tmp = stack.pop();
-		    					if (tmp == "(") {
-		    						break;
-		    					}
-		    					post.push(tmp);
-		    				}
-		    				stack.pop();
-		    			}
-		    			else {
-		    				while (!stack.empty() && precedence(stack.lastElement(), list.get(i)) >= 0) {
-		    					post.push(stack.pop());
-		    				}
-		    				stack.push(list.get(i));
-		    			}
-		    		}
-		    		
-		    	}
-		    	
-		    	while(!stack.empty()) {
-		    		post.push(stack.pop());
-		    	}
-		    	//System.out.println();
-		    	
-		    	/*for(int i=0;i<post.size();i++) {
-		    		System.out.println(post.get(i));
-		    	}*/
-		    	//calculate postfix
-		    	
-		    	/*for(int i=post.size()-1;i>0;i--) {
-		    		if(is_operand(post.get(i))) {
-		    			intS.push(post.get(i));
-		    			System.out.println(intS.peek());
-		    		}
-		    	}*/
-		    	
-		    	
-		    	for(int i=0;i<post.size();i++) {
-		    		double oper1, oper2;
-		    		String result;
-		    		String op=post.get(i);
-		    
-		    		if(is_operand(post.get(i))) {
-		    			intS.push(post.get(i));
-		    		}else {
-		    			if(op.equals("+")) {
-			    			oper2=Double.parseDouble(intS.pop());
-			    			oper1=Double.parseDouble(intS.pop());
-			    			result=Double.toString(oper1+oper2);
-			    			intS.push(result);
+		    	if(input_number!="") {
+		    		//convert to postfix
+			    	if(input_number.contains("√")) {
+			    		input_number=input_number.substring(1, input_number.length());
+			    		double n=Math.sqrt(Double.parseDouble(input_number));
+			    		input_number=Double.toString(n);
+			    	}
+			    	list.add(input_number);
+			    	for(int i=0;i<list.size();i++) {
+			    		//System.out.println(list.get(i));
+			    	}
+			    	
+			    	for (int i = 0; i < list.size(); i++) {
+			    		if (is_operand(list.get(i))) {
+			    			post.push(list.get(i));
 			    		}
-			    		else if(op.equals("*")) {
-			    			oper2=Double.parseDouble(intS.pop());
-			    			oper1=Double.parseDouble(intS.pop());
-			    			result=Double.toString(oper1*oper2);
-			    			intS.push(result);
+			    		else {
+			    			if (list.get(i) == "(") {
+			    				stack.push(list.get(i));
+			    			}
+			    			else if (list.get(i) == ")") {
+			    				while (true) {
+			    					tmp = stack.pop();
+			    					if (tmp == "(") {
+			    						break;
+			    					}
+			    					post.push(tmp);
+			    				}
+			    				stack.pop();
+			    			}
+			    			else{
+			    				while (!stack.empty() && precedence(stack.lastElement(), list.get(i)) >= 0) {
+			    					post.push(stack.pop());
+			    				}
+			    				stack.push(list.get(i));
+			    			}
 			    		}
-			    		else if(op.equals("-")) {
-			    			oper2=Double.parseDouble(intS.pop());
-			    			oper1=Double.parseDouble(intS.pop());
-			    			result=Double.toString(oper1-oper2);
-			    			intS.push(result);
+			    		
+			    	}
+			    	
+			    	while(!stack.empty()) {
+			    		post.push(stack.pop());
+			    	}
+			    	
+			    	for(int i=0;i<post.size();i++) {
+			    		double oper1, oper2;
+			    		String result;
+			    		String op=post.get(i);
+			    
+			    		if(is_operand(post.get(i))) {
+			    			intS.push(post.get(i));
+			    		}else {
+			    			if(op.equals("+")) {
+				    			oper2=Double.parseDouble(intS.pop());
+				    			oper1=Double.parseDouble(intS.pop());
+				    			result=Double.toString(oper1+oper2);
+				    			intS.push(result);
+				    		}
+				    		else if(op.equals("*")) {
+				    			oper2=Double.parseDouble(intS.pop());
+				    			oper1=Double.parseDouble(intS.pop());
+				    			result=Double.toString(oper1*oper2);
+				    			intS.push(result);
+				    		}
+				    		else if(op.equals("-")) {
+				    			oper2=Double.parseDouble(intS.pop());
+				    			oper1=Double.parseDouble(intS.pop());
+				    			result=Double.toString(oper1-oper2);
+				    			intS.push(result);
+				    		}
+				    		else if(op.equals("/")) {
+				    			oper2=Double.parseDouble(intS.pop());
+				    			oper1=Double.parseDouble(intS.pop());
+				    			result=Double.toString(oper1/oper2);
+				    			intS.push(result);
+				    			
+				    		}
 			    		}
-			    		else if(op.equals("/")) {
-			    			oper2=Double.parseDouble(intS.pop());
-			    			oper1=Double.parseDouble(intS.pop());
-			    			result=Double.toString(oper1/oper2);
-			    			intS.push(result);
-			    			
-			    		}
-		    		}
-		    		
-		    		/*System.out.println();
-		    		for(int j=0;j<intS.size();j++) {
-		    			System.out.println(intS.get(j));
-		    		}*/
+			    	}
+			    	result_number=Double.parseDouble(intS.pop());
+			    
+			        
+			        if(result_number%1==0) {
+			        	   tmpI=Integer.parseInt(String.valueOf(Math.round(result_number)));
+			        	   txtResult.setText(tmpI + "");
+			        }else {
+			        	   txtResult.setText(result_number + "");
+			           }
+			        
+			        String l = "";
+			        for(String str: list) {
+			        	l+=str;
+			        }
+			        l+=" = ";
+			        l+=Double.toString(result_number);
+			        his.add(l);
+			        //txtResult.setText(result_number + "");
+			        oper="=";
+			        
+			        result.add(result_number);
+			        
+			        memory=result_number;
+			        
+			        result_number=0;
+			    	input_number="";
+			    	stack.clear();
+			    	list.clear();
+			    	post.clear();
 		    	}
-		    	result_number=Double.parseDouble(intS.pop());
-		    	/*
-		        if (oper == "+") {
-		            result_number += Double.parseDouble(input_number);
-		            input_number = "0";
-		        }
-		        if (oper == "-") {
-		            result_number -= Double.parseDouble(input_number);
-		            input_number = "0";
-		        }
-		        if (oper == "*") {
-		            result_number *= Double.parseDouble(input_number);
-		            input_number = "0";
-		        }
-		        if (oper == "/") {
-		            result_number /= Double.parseDouble(input_number);
-		            input_number = "0";
-		        }
-				*/
-		        
-		        if(result_number%1==0) {
-		        	   tmpI=Integer.parseInt(String.valueOf(Math.round(result_number)));
-		        	   txtResult.setText(tmpI + "");
-		        }else {
-		        	   txtResult.setText(result_number + "");
-		           }
-		        
-		        String l = "";
-		        for(String str: list) {
-		        	l+=str;
-		        }
-		        l+=" = ";
-		        l+=Double.toString(result_number);
-		        his.add(l);
-		        //txtResult.setText(result_number + "");
-		        oper="=";
-		        
-		        result.add(result_number);
-		        
-		        memory=result_number;
-		        
-		        result_number=0;
-		    	input_number="";
-		    	stack.clear();
-		    	list.clear();
-		    	post.clear();
-		        
 		    }
 		    
 		});
@@ -759,6 +688,4 @@ public class Calculator {
 		}
 
 	}
-	
-
 }
